@@ -1,0 +1,119 @@
+name: "CodeQL Security Analysis"
+
+on:
+  push:
+    branches: [ master, backend, frontend, cms ]
+  pull_request:
+    branches: [ master, backend, frontend, cms ]
+  schedule:
+    - cron: '30 1 * * 0' # Weekly on Sunday at 1:30 AM
+
+jobs:
+  analyze:
+    name: Analyze Code
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript', 'typescript' ]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          queries: +security-and-quality
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm for CMS
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Ensure Backend lock file and install
+        run: |
+          if [ -d "backend" ]; then
+            cd backend
+            if [ ! -f "package-lock.json" ]; then
+              echo "No package-lock.json found, generating one..."
+              npm i --package-lock-only
+            fi
+            npm ci
+          fi
+
+      - name: Ensure Frontend lock file and install
+        run: |
+          if [ -d "frontend" ]; then
+            cd frontend
+            if [ ! -f "package-lock.json" ]; then
+              echo "No package-lock.json found, generating one..."
+              npm i --package-lock-only
+            fi
+            npm ci
+          fi
+
+      - name: Ensure CMS lock file and install
+        run: |
+          if [ -d "cms" ]; then
+            cd cms
+            if [ ! -f "pnpm-lock.yaml" ]; then
+              echo "No pnpm-lock.yaml found, generating one..."
+              pnpm install --lockfile-only
+            fi
+            pnpm install --frozen-lockfile
+          fi
+
+      - name: Build Backend
+        run: |
+          if [ -d "backend" ] && [ -f "backend/package.json" ]; then
+            cd backend
+            if npm run | grep -q "build"; then
+              npm run build
+            else
+              echo "No build script found for backend, skipping..."
+            fi
+          fi
+
+      - name: Build Frontend
+        run: |
+          if [ -d "frontend" ] && [ -f "frontend/package.json" ]; then
+            cd frontend
+            if npm run | grep -q "build"; then
+              npm run build
+            else
+              echo "No build script found for frontend, skipping..."
+            fi
+          fi
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:3000
+
+      - name: Build CMS
+        run: |
+          if [ -d "cms" ] && [ -f "cms/package.json" ]; then
+            cd cms
+            if pnpm run | grep -q "build"; then
+              pnpm run build
+            else
+              echo "No build script found for CMS, skipping..."
+            fi
+          fi
+        env:
+          DATABASE_URI: postgresql://test:test@localhost:5432/test
+          PAYLOAD_SECRET: test-secret
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{matrix.language}}"
