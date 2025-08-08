@@ -316,7 +316,7 @@ export const EconomicIndicators: CollectionConfig = {
       ],
     },
     {
-      name: 'traditionalPerspective',
+      name: 'tradPerspective',
       type: 'group',
       label: 'Traditional Economics Perspective',
       fields: [

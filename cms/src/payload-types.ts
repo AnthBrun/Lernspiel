@@ -491,10 +491,10 @@ export interface DecisionOption {
       }[]
     | null;
   mmtAnalysis?: {
-    mmtRecommendation?:
+    recommendation?:
       | ('strongly-recommended' | 'recommended' | 'neutral' | 'not-recommended' | 'strongly-discouraged')
       | null;
-    mmtReasoning?: {
+    reasoning?: {
       root: {
         type: string;
         children: {
@@ -509,7 +509,7 @@ export interface DecisionOption {
       };
       [k: string]: unknown;
     } | null;
-    mmtAlternative?: {
+    alternative?: {
       root: {
         type: string;
         children: {
@@ -525,11 +525,11 @@ export interface DecisionOption {
       [k: string]: unknown;
     } | null;
   };
-  traditionalAnalysis?: {
-    traditionalRecommendation?:
+  tradAnalysis?: {
+    recommendation?:
       | ('strongly-recommended' | 'recommended' | 'neutral' | 'not-recommended' | 'strongly-discouraged')
       | null;
-    traditionalReasoning?: {
+    reasoning?: {
       root: {
         type: string;
         children: {
@@ -544,7 +544,7 @@ export interface DecisionOption {
       };
       [k: string]: unknown;
     } | null;
-    traditionalConcerns?: {
+    concerns?: {
       root: {
         type: string;
         children: {
@@ -758,7 +758,7 @@ export interface EconomicIndicator {
       max?: number | null;
     };
   };
-  traditionalPerspective?: {
+  tradPerspective?: {
     importance?: ('critical' | 'important' | 'moderate' | 'low') | null;
     analysis?: {
       root: {
@@ -890,7 +890,7 @@ export interface LearningContent {
       [k: string]: unknown;
     } | null;
   };
-  traditionalPerspective?: {
+  tradPerspective?: {
     position?: {
       root: {
         type: string;
@@ -1384,16 +1384,16 @@ export interface DecisionOptionsSelect<T extends boolean = true> {
   mmtAnalysis?:
     | T
     | {
-        mmtRecommendation?: T;
-        mmtReasoning?: T;
-        mmtAlternative?: T;
+        recommendation?: T;
+        reasoning?: T;
+        alternative?: T;
       };
-  traditionalAnalysis?:
+  tradAnalysis?:
     | T
     | {
-        traditionalRecommendation?: T;
-        traditionalReasoning?: T;
-        traditionalConcerns?: T;
+        recommendation?: T;
+        reasoning?: T;
+        concerns?: T;
       };
   playerFeedback?:
     | T
@@ -1493,7 +1493,7 @@ export interface EconomicIndicatorsSelect<T extends boolean = true> {
               max?: T;
             };
       };
-  traditionalPerspective?:
+  tradPerspective?:
     | T
     | {
         importance?: T;
@@ -1548,7 +1548,7 @@ export interface LearningContentSelect<T extends boolean = true> {
             };
         evidence?: T;
       };
-  traditionalPerspective?:
+  tradPerspective?:
     | T
     | {
         position?: T;

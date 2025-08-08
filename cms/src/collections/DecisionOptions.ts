@@ -254,7 +254,7 @@ export const DecisionOptions: CollectionConfig = {
       label: 'MMT Analysis',
       fields: [
         {
-          name: 'mmtRecommendation',
+          name: 'recommendation',
           type: 'select',
           options: [
             { label: 'Strongly Recommended', value: 'strongly-recommended' },
@@ -265,24 +265,24 @@ export const DecisionOptions: CollectionConfig = {
           ],
         },
         {
-          name: 'mmtReasoning',
+          name: 'reasoning',
           type: 'richText',
           label: 'MMT Reasoning',
         },
         {
-          name: 'mmtAlternative',
+          name: 'alternative',
           type: 'richText',
           label: 'MMT Alternative Suggestion',
         },
       ],
     },
     {
-      name: 'traditionalAnalysis',
+      name: 'tradAnalysis',
       type: 'group',
       label: 'Traditional Economics Analysis',
       fields: [
         {
-          name: 'traditionalRecommendation',
+          name: 'recommendation',
           type: 'select',
           options: [
             { label: 'Strongly Recommended', value: 'strongly-recommended' },
@@ -293,12 +293,12 @@ export const DecisionOptions: CollectionConfig = {
           ],
         },
         {
-          name: 'traditionalReasoning',
+          name: 'reasoning',
           type: 'richText',
           label: 'Traditional Economics Reasoning',
         },
         {
-          name: 'traditionalConcerns',
+          name: 'concerns',
           type: 'richText',
           label: 'Traditional Economics Concerns',
         },
