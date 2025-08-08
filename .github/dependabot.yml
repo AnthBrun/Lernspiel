@@ -34,22 +34,23 @@ updates:
     open-pull-requests-limit: 10
     target-branch: "frontend"
 
-  # CMS dependencies
-  - package-ecosystem: "npm"
-    directory: "/cms"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-    reviewers:
-      - "anthbrun"  # Ersetze mit deinem GitHub Username
-    assignees:
-      - "anthbrun"  # Ersetze mit deinem GitHub Username
-    commit-message:
-      prefix: "cms"
-      include: "scope"
-    open-pull-requests-limit: 10
-    target-branch: "cms"
+  # CMS dependencies (uses pnpm but Dependabot doesn't support pnpm yet)
+  # Temporarily disabled - will be handled manually
+  # - package-ecosystem: "npm"
+  #   directory: "/cms"
+  #   schedule:
+  #     interval: "weekly"
+  #     day: "monday"
+  #     time: "09:00"
+  #   reviewers:
+  #     - "anthbrun"  # Ersetze mit deinem GitHub Username
+  #   assignees:
+  #     - "anthbrun"  # Ersetze mit deinem GitHub Username
+  #   commit-message:
+  #     prefix: "cms"
+  #     include: "scope"
+  #   open-pull-requests-limit: 10
+  #   target-branch: "cms"
 
   # Docker dependencies
   - package-ecosystem: "docker"
