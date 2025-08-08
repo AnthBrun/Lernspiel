@@ -9,11 +9,6 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
-import { GameRoles } from './collections/GameRoles'
-import { GameScenarios } from './collections/GameScenarios'
-import { DecisionOptions } from './collections/DecisionOptions'
-import { EconomicIndicators } from './collections/EconomicIndicators'
-import { LearningContent } from './collections/LearningContent'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -25,15 +20,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [
-    Users, 
-    Media, 
-    GameRoles, 
-    GameScenarios, 
-    DecisionOptions, 
-    EconomicIndicators, 
-    LearningContent
-  ],
+  collections: [Users, Media],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
