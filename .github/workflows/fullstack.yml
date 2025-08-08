@@ -15,7 +15,6 @@ jobs:
       frontend: ${{ steps.changes.outputs.frontend }}
       cms: ${{ steps.changes.outputs.cms }}
       docker: ${{ steps.changes.outputs.docker }}
-      workflows: ${{ steps.changes.outputs.workflows }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,19 +26,13 @@ jobs:
           filters: |
             backend:
               - 'backend/**'
-              - '!backend/README.md'
             frontend:
               - 'frontend/**'
-              - '!frontend/README.md'
             cms:
               - 'cms/**'
-              - '!cms/README.md'
             docker:
               - 'docker-compose.yml'
-              - 'docker-compose.*.yml'
               - '**/Dockerfile'
-            workflows:
-              - '.github/workflows/**'
 
   test-backend:
     name: Test Backend
@@ -60,7 +53,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
         ports:
-          - 5434:5432
+          - 5432:5432
 
     steps:
       - name: Checkout code
@@ -99,7 +92,7 @@ jobs:
           # Skip E2E tests for now as they require additional database configuration
           echo "E2E tests skipped in fullstack workflow"
         env:
-          DATABASE_URL: postgresql://test_user:test_password@localhost:5434/serious_game_test
+          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/serious_game_test
 
   test-frontend:
     name: Test Frontend
@@ -140,15 +133,8 @@ jobs:
       - name: Run frontend tests
         run: |
           cd frontend
-          # Check if test script exists  
-          if npm run | grep -q "test"; then
-            npm run test
-          else
-            echo "✅ Frontend tests skipped - no test script configured"
-          fi
-          
-          # Always run lint and build
           npm run lint
+          npm run test --passWithNoTests
           npm run build
         env:
           NEXT_PUBLIC_API_URL: http://localhost:3000
@@ -172,7 +158,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
         ports:
-          - 5435:5432
+          - 5432:5432
 
     steps:
       - name: Checkout code
@@ -212,14 +198,11 @@ jobs:
       - name: Run CMS tests
         run: |
           cd cms
-          # Always run lint and build (these should work)
           pnpm run lint
           pnpm run build
-          
-          # Skip complex test suite but make step successful
-          echo "✅ CMS tests completed - E2E tests skipped in CI (require additional browser setup)"
+          pnpm run test --run
         env:
-          DATABASE_URI: postgresql://test_user:test_password@localhost:5435/payload_test
+          DATABASE_URI: postgresql://test_user:test_password@localhost:5432/payload_test
           PAYLOAD_SECRET: test-secret-key-for-ci
 
   integration-test:
@@ -241,7 +224,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
         ports:
-          - 5433:5432
+          - 5432:5432
 
     steps:
       - name: Checkout code
@@ -250,95 +233,38 @@ jobs:
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Create docker-compose override for CI
+      - name: Build all services
         run: |
-          cat > docker-compose.ci.yml << 'EOF'
-          services:
-            backend:
-              environment:
-                - DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5433/serious_game
-              extra_hosts:
-                - "host.docker.internal:host-gateway"
-            cms:
-              environment:
-                - DATABASE_URI=postgresql://postgres:postgres@host.docker.internal:5433/serious_game
-                - PAYLOAD_SECRET=test-secret-key-for-ci
-              extra_hosts:
-                - "host.docker.internal:host-gateway"
-            postgres:
-              # Skip postgres service in CI since GitHub Actions provides it
-              deploy:
-                replicas: 0
-          EOF
+          docker compose -f docker-compose.yml build
 
-      - name: Build all services (without postgres)
+      - name: Start all services
         run: |
-          docker compose -f docker-compose.yml -f docker-compose.ci.yml build backend frontend cms
-
-      - name: Start services (without postgres) 
-        run: |
-          # Try to start services
-          docker compose -f docker-compose.yml -f docker-compose.ci.yml up -d --remove-orphans backend frontend cms
-          
-          # Give services time to start
-          echo "Waiting for services to start..."
-          sleep 45
-          
-          # Show service status for debugging
-          echo "Service status:"
-          docker compose -f docker-compose.yml -f docker-compose.ci.yml ps
+          docker compose -f docker-compose.yml up -d
+          sleep 30
 
       - name: Run health checks
         run: |
           # Check if all services are running
-          echo "=== Docker Compose Services Status ==="
-          docker compose -f docker-compose.yml -f docker-compose.ci.yml ps
+          docker compose -f docker-compose.yml ps
           
-          echo "=== Docker Container Logs ==="
-          docker compose -f docker-compose.yml -f docker-compose.ci.yml logs --tail=50
+          # Test backend health
+          curl -f http://localhost:3000/health || exit 1
           
-          # Wait a bit more for services to be fully ready
-          echo "=== Waiting for services to be ready ==="
-          sleep 15
-          
-          # Test backend health (more permissive)
-          echo "=== Testing Backend ==="
-          if curl -f --connect-timeout 10 --max-time 30 http://localhost:3000/health; then
-            echo "✅ Backend health endpoint OK"
-          elif curl -f --connect-timeout 10 --max-time 30 http://localhost:3000; then
-            echo "✅ Backend root endpoint OK"
-          else
-            echo "⚠️ Backend health check failed, but continuing..."
-          fi
-          
-          # Test frontend availability  
-          echo "=== Testing Frontend ==="
-          if curl -f --connect-timeout 10 --max-time 30 http://localhost:3001; then
-            echo "✅ Frontend OK"
-          else
-            echo "⚠️ Frontend health check failed, but continuing..."
-          fi
+          # Test frontend availability
+          curl -f http://localhost:3001 || exit 1
           
           # Test CMS availability
-          echo "=== Testing CMS ==="
-          if curl -f --connect-timeout 10 --max-time 30 http://localhost:3002/admin; then
-            echo "✅ CMS admin endpoint OK"  
-          elif curl -f --connect-timeout 10 --max-time 30 http://localhost:3002; then
-            echo "✅ CMS root endpoint OK"
-          else
-            echo "⚠️ CMS health check failed, but continuing..."
-          fi
+          curl -f http://localhost:3002/admin || exit 1
 
       - name: Run integration tests
         run: |
           echo "Integration tests would run here"
           # Add your integration test commands
-          echo "Services are running successfully"
 
       - name: Stop services
         if: always()
         run: |
-          docker compose -f docker-compose.yml -f docker-compose.ci.yml down -v
+          docker compose -f docker-compose.yml down -v
 
   build-and-push:
     name: Build and Push Images
