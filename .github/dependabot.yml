@@ -1,0 +1,83 @@
+version: 2
+updates:
+  # Backend dependencies
+  - package-ecosystem: "npm"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    reviewers:
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
+    assignees:
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
+    commit-message:
+      prefix: "backend"
+      include: "scope"
+    open-pull-requests-limit: 10
+    target-branch: "backend"
+
+  # Frontend dependencies  
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday" 
+      time: "09:00"
+    reviewers:
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
+    assignees:
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
+    commit-message:
+      prefix: "frontend"
+      include: "scope"
+    open-pull-requests-limit: 10
+    target-branch: "frontend"
+
+  # CMS dependencies (uses pnpm but Dependabot doesn't support pnpm yet)
+  # Temporarily disabled - will be handled manually
+  # - package-ecosystem: "npm"
+  #   directory: "/cms"
+  #   schedule:
+  #     interval: "weekly"
+  #     day: "monday"
+  #     time: "09:00"
+  #   reviewers:
+  #     - "anthbrun"  # Ersetze mit deinem GitHub Username
+  #   assignees:
+  #     - "anthbrun"  # Ersetze mit deinem GitHub Username
+  #   commit-message:
+  #     prefix: "cms"
+  #     include: "scope"
+  #   open-pull-requests-limit: 10
+  #   target-branch: "cms"
+
+  # Docker dependencies
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    reviewers:
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
+    assignees:
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
+    commit-message:
+      prefix: "docker"
+      include: "scope"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    reviewers:
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
+    assignees:
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
+    commit-message:
+      prefix: "ci"
+      include: "scope"
