@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Lobby() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-800">
@@ -34,7 +36,7 @@ export default function Lobby() {
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
                 Available Game Sessions
               </h2>
-              
+
               {/* Session List */}
               <div className="space-y-4">
                 <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow">
@@ -57,9 +59,11 @@ export default function Lobby() {
                       <span>⏱️ 45 mins</span>
                       <span>🎭 Multiple roles available</span>
                     </div>
-                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <Link
+                      href="/game"
+                      className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-3 rounded-lg font-medium hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                       Join Game
-                    </button>
+                    </Link>
                   </div>
                 </div>
 
@@ -141,9 +145,9 @@ export default function Lobby() {
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Session Name
                   </label>
-                  <input 
-                    type="text" 
-                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white" 
+                  <input
+                    type="text"
+                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-slate-700 text-gray-900 dark:text-white"
                     placeholder="My Economics Game"
                   />
                 </div>
@@ -163,7 +167,7 @@ export default function Lobby() {
                     Make session public
                   </label>
                 </div>
-                <button 
+                <button
                   type="submit"
                   className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white py-3 rounded-lg font-medium hover:from-blue-600 hover:to-indigo-700 transition-all"
                 >
