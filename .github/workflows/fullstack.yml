@@ -234,17 +234,17 @@ jobs:
 
       - name: Build all services
         run: |
-          docker-compose -f docker-compose.yml build
+          docker compose -f docker-compose.yml build
 
       - name: Start all services
         run: |
-          docker-compose -f docker-compose.yml up -d
+          docker compose -f docker-compose.yml up -d
           sleep 30
 
       - name: Run health checks
         run: |
           # Check if all services are running
-          docker-compose -f docker-compose.yml ps
+          docker compose -f docker-compose.yml ps
           
           # Test backend health
           curl -f http://localhost:3000/health || exit 1
@@ -263,7 +263,7 @@ jobs:
       - name: Stop services
         if: always()
         run: |
-          docker-compose -f docker-compose.yml down -v
+          docker compose -f docker-compose.yml down -v
 
   build-and-push:
     name: Build and Push Images
