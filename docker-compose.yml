@@ -1,0 +1,79 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: lernspiel_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: serious_game
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: lernspiel_backend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/package.json:/app/package.json
+      - /app/node_modules
+    command: npm run start:dev
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: lernspiel_frontend
+    restart: always
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/package.json:/app/package.json
+      - /app/node_modules
+    command: npm run dev
+
+  cms:
+    build:
+      context: ./cms
+      dockerfile: Dockerfile
+    container_name: lernspiel_cms
+    restart: always
+    ports:
+      - "3002:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URI=postgresql://postgres:postgres@postgres:5432/serious_game
+      - PAYLOAD_SECRET=c9834e6b26ddec0c295339ce
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./cms/src:/app/src
+      - ./cms/package.json:/app/package.json
+      - /app/node_modules
+    command: npm run dev
+
+volumes:
+  postgres_data:
