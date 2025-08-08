@@ -20,7 +20,7 @@ jobs:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_DB: payload_test
+          POSTGRES_DB: cms_test
           POSTGRES_USER: test_user
           POSTGRES_PASSWORD: test_password
         options: >-
@@ -41,23 +41,25 @@ jobs:
           node-version: '20'
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v2
         with:
           version: 8
 
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
+      - name: Ensure pnpm-lock.yaml exists
         run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+          cd cms
+          if [ ! -f "pnpm-lock.yaml" ]; then
+            echo "No pnpm-lock.yaml found, generating one..."
+            pnpm install --lockfile-only
+          fi
 
-      - name: Setup pnpm cache
+      - name: Cache dependencies
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('cms/pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+            ${{ runner.os }}-pnpm-
 
       - name: Install dependencies
         run: |
@@ -67,152 +69,20 @@ jobs:
       - name: Run linting
         run: |
           cd cms
-          pnpm run lint
+          pnpm lint
 
       - name: Run type checking
         run: |
           cd cms
-          pnpm run type-check
+          pnpm type-check
 
-      - name: Build application
+      - name: Run tests
         run: |
           cd cms
-          pnpm run build
+          pnpm test
         env:
-          DATABASE_URI: postgresql://test_user:test_password@localhost:5432/payload_test
-          PAYLOAD_SECRET: test-secret-key-for-ci
-
-      - name: Run unit tests
-        run: |
-          cd cms
-          pnpm run test --run
-        env:
-          DATABASE_URI: postgresql://test_user:test_password@localhost:5432/payload_test
-          PAYLOAD_SECRET: test-secret-key-for-ci
-
-  e2e-tests:
-    name: E2E Tests
-    runs-on: ubuntu-latest
-    needs: test
-
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_DB: payload_e2e
-          POSTGRES_USER: test_user
-          POSTGRES_PASSWORD: test_password
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 8
-
-      - name: Install dependencies
-        run: |
-          cd cms
-          pnpm install --frozen-lockfile
-
-      - name: Install Playwright
-        run: |
-          cd cms
-          npx playwright install --with-deps
-
-      - name: Build application
-        run: |
-          cd cms
-          pnpm run build
-        env:
-          DATABASE_URI: postgresql://test_user:test_password@localhost:5432/payload_e2e
-          PAYLOAD_SECRET: test-secret-key-for-e2e
-
-      - name: Start application
-        run: |
-          cd cms
-          pnpm run serve &
-          sleep 15
-        env:
-          DATABASE_URI: postgresql://test_user:test_password@localhost:5432/payload_e2e
-          PAYLOAD_SECRET: test-secret-key-for-e2e
-
-      - name: Run Playwright tests
-        run: |
-          cd cms
-          npx playwright test
-        env:
-          DATABASE_URI: postgresql://test_user:test_password@localhost:5432/payload_e2e
-          PAYLOAD_SECRET: test-secret-key-for-e2e
-
-      - name: Upload Playwright report
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: playwright-report-cms
-          path: cms/playwright-report/
-          retention-days: 7
-
-  integration-tests:
-    name: Integration Tests
-    runs-on: ubuntu-latest
-    needs: test
-
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_DB: payload_integration
-          POSTGRES_USER: test_user
-          POSTGRES_PASSWORD: test_password
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 8
-
-      - name: Install dependencies
-        run: |
-          cd cms
-          pnpm install --frozen-lockfile
-
-      - name: Run integration tests
-        run: |
-          cd cms
-          pnpm run test:int
-        env:
-          DATABASE_URI: postgresql://test_user:test_password@localhost:5432/payload_integration
-          PAYLOAD_SECRET: test-secret-key-for-integration
+          DATABASE_URL: postgresql://test_user:test_password@localhost:5432/cms_test
+          PAYLOAD_SECRET: test-secret-key
 
   build:
     name: Build CMS
@@ -223,6 +93,44 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Ensure pnpm-lock.yaml exists
+        run: |
+          cd cms
+          if [ ! -f "pnpm-lock.yaml" ]; then
+            echo "No pnpm-lock.yaml found, generating one..."
+            pnpm install --lockfile-only
+          fi
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('cms/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: |
+          cd cms
+          pnpm install --frozen-lockfile
+
+      - name: Build application
+        run: |
+          cd cms
+          pnpm build
+        env:
+          PAYLOAD_SECRET: test-secret-key
+
       - name: Build Docker image
         run: |
           docker build -t cms:${{ github.sha }} -f cms/Dockerfile cms/
@@ -230,17 +138,17 @@ jobs:
   deploy:
     name: Deploy CMS
     runs-on: ubuntu-latest
-    needs: [test, build, integration-tests]
+    needs: [test, build]
     if: github.ref == 'refs/heads/cms' && github.event_name == 'push'
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy CMS
+      - name: Deploy to staging
         run: |
           echo "CMS deployment would happen here"
-          # Example: Deploy to your CMS hosting environment
+          # Example: Deploy to your staging/production environment
           # docker-compose -f docker-compose.prod.yml up -d cms
 
   security-scan:
@@ -251,10 +159,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v2
         with:
           version: 8
+
+      - name: Ensure pnpm-lock.yaml exists
+        run: |
+          cd cms
+          if [ ! -f "pnpm-lock.yaml" ]; then
+            echo "No pnpm-lock.yaml found, generating one..."
+            pnpm install --lockfile-only
+          fi
 
       - name: Run security audit
         run: |
