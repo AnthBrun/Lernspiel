@@ -8,9 +8,9 @@ updates:
       day: "monday"
       time: "09:00"
     reviewers:
-      - "anthony"  # Ersetze mit deinem GitHub Username
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
     assignees:
-      - "anthony"  # Ersetze mit deinem GitHub Username
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
     commit-message:
       prefix: "backend"
       include: "scope"
@@ -25,9 +25,9 @@ updates:
       day: "monday" 
       time: "09:00"
     reviewers:
-      - "anthony"  # Ersetze mit deinem GitHub Username
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
     assignees:
-      - "anthony"  # Ersetze mit deinem GitHub Username
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
     commit-message:
       prefix: "frontend"
       include: "scope"
@@ -42,9 +42,9 @@ updates:
       day: "monday"
       time: "09:00"
     reviewers:
-      - "anthony"  # Ersetze mit deinem GitHub Username
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
     assignees:
-      - "anthony"  # Ersetze mit deinem GitHub Username
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
     commit-message:
       prefix: "cms"
       include: "scope"
@@ -59,9 +59,9 @@ updates:
       day: "monday"
       time: "09:00"
     reviewers:
-      - "anthony"  # Ersetze mit deinem GitHub Username
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
     assignees:
-      - "anthony"  # Ersetze mit deinem GitHub Username
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
     commit-message:
       prefix: "docker"
       include: "scope"
@@ -74,9 +74,9 @@ updates:
       day: "monday"
       time: "09:00"
     reviewers:
-      - "anthony"  # Ersetze mit deinem GitHub Username
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
     assignees:
-      - "anthony"  # Ersetze mit deinem GitHub Username
+      - "anthbrun"  # Ersetze mit deinem GitHub Username
     commit-message:
       prefix: "ci"
       include: "scope"
