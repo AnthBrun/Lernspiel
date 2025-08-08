@@ -236,7 +236,6 @@ jobs:
       - name: Create docker-compose override for CI
         run: |
           cat > docker-compose.ci.yml << 'EOF'
-          version: '3.8'
           services:
             backend:
               environment:
@@ -251,8 +250,8 @@ jobs:
                 - "host.docker.internal:host-gateway"
             postgres:
               # Skip postgres service in CI since GitHub Actions provides it
-              profiles:
-                - disabled
+              deploy:
+                replicas: 0
           EOF
 
       - name: Build all services (without postgres)
@@ -261,25 +260,57 @@ jobs:
 
       - name: Start services (without postgres) 
         run: |
-          docker compose -f docker-compose.yml -f docker-compose.ci.yml up -d backend frontend cms
-          sleep 30
+          # Try to start services
+          docker compose -f docker-compose.yml -f docker-compose.ci.yml up -d --remove-orphans backend frontend cms
+          
+          # Give services time to start
+          echo "Waiting for services to start..."
+          sleep 45
+          
+          # Show service status for debugging
+          echo "Service status:"
+          docker compose -f docker-compose.yml -f docker-compose.ci.yml ps
 
       - name: Run health checks
         run: |
           # Check if all services are running
+          echo "=== Docker Compose Services Status ==="
           docker compose -f docker-compose.yml -f docker-compose.ci.yml ps
           
+          echo "=== Docker Container Logs ==="
+          docker compose -f docker-compose.yml -f docker-compose.ci.yml logs --tail=50
+          
           # Wait a bit more for services to be fully ready
-          sleep 10
+          echo "=== Waiting for services to be ready ==="
+          sleep 15
           
-          # Test backend health (if it has a health endpoint)
-          curl -f http://localhost:3000/health || curl -f http://localhost:3000 || echo "Backend health check failed"
+          # Test backend health (more permissive)
+          echo "=== Testing Backend ==="
+          if curl -f --connect-timeout 10 --max-time 30 http://localhost:3000/health; then
+            echo "✅ Backend health endpoint OK"
+          elif curl -f --connect-timeout 10 --max-time 30 http://localhost:3000; then
+            echo "✅ Backend root endpoint OK"
+          else
+            echo "⚠️ Backend health check failed, but continuing..."
+          fi
           
-          # Test frontend availability
-          curl -f http://localhost:3001 || echo "Frontend health check failed"
+          # Test frontend availability  
+          echo "=== Testing Frontend ==="
+          if curl -f --connect-timeout 10 --max-time 30 http://localhost:3001; then
+            echo "✅ Frontend OK"
+          else
+            echo "⚠️ Frontend health check failed, but continuing..."
+          fi
           
-          # Test CMS availability  
-          curl -f http://localhost:3002/admin || curl -f http://localhost:3002 || echo "CMS health check failed"
+          # Test CMS availability
+          echo "=== Testing CMS ==="
+          if curl -f --connect-timeout 10 --max-time 30 http://localhost:3002/admin; then
+            echo "✅ CMS admin endpoint OK"  
+          elif curl -f --connect-timeout 10 --max-time 30 http://localhost:3002; then
+            echo "✅ CMS root endpoint OK"
+          else
+            echo "⚠️ CMS health check failed, but continuing..."
+          fi
 
       - name: Run integration tests
         run: |

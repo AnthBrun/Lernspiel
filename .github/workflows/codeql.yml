@@ -42,6 +42,16 @@ jobs:
         with:
           version: 9
 
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/.pnpm-store
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/package-lock.json', '**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-deps-
+
       - name: Install Dependencies
         run: |
           # Backend dependencies

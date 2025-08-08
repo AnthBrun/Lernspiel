@@ -73,7 +73,7 @@ services:
       - ./cms/src:/app/src
       - ./cms/package.json:/app/package.json
       - /app/node_modules
-    command: npm run dev
+    command: pnpm run dev
 
 volumes:
   postgres_data:
