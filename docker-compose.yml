@@ -33,7 +33,6 @@ services:
     volumes:
       - ./backend/src:/app/src
       - ./backend/package.json:/app/package.json
-      - /app/node_modules
     command: npm run start:dev
 
   frontend:
@@ -51,7 +50,6 @@ services:
     volumes:
       - ./frontend/src:/app/src
       - ./frontend/package.json:/app/package.json
-      - /app/node_modules
     command: npm run dev
 
   cms:
@@ -72,8 +70,7 @@ services:
     volumes:
       - ./cms/src:/app/src
       - ./cms/package.json:/app/package.json
-      - /app/node_modules
-    command: npm run dev
+    command: pnpm run dev
 
 volumes:
   postgres_data:

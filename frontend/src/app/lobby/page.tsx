@@ -20,9 +20,9 @@ export default function Lobby() {
               </div>
             </div>
             <nav className="flex space-x-6">
-              <a href="/" className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
+              <Link href="/" className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors">
                 Home
-              </a>
+              </Link>
             </nav>
           </div>
         </div>
