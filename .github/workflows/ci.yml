@@ -1,0 +1,126 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  detect-changes:
+    name: detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      cms: ${{ steps.filter.outputs.cms }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      backend: ${{ steps.filter.outputs.backend }}
+      root: ${{ steps.filter.outputs.root }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            cms:
+              - 'cms/**'
+            frontend:
+              - 'frontend/**'
+            backend:
+              - 'backend/**'
+            root:
+              - 'package.json'
+              - 'docker-compose.yml'
+              - '.github/**'
+
+  cms-test:
+    name: cms: test
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Cache npm (cms)
+        uses: actions/cache@v4
+        with:
+          path: |
+            cms/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-cms-${{ hashFiles('cms/package-lock.json') }}
+      - name: Install & test (cms)
+        working-directory: ./cms
+        run: |
+          if [ "${{ needs.detect-changes.outputs.cms }}" != "true" ] && [ "${{ needs.detect-changes.outputs.root }}" != "true" ]; then
+            echo "No changes in cms — skipping tests"
+            exit 0
+          fi
+          if [ -f package.json ]; then
+            npm ci
+            npm test || npm run test:ci || exit 1
+          else
+            echo "No package.json in ./cms — skip tests"
+          fi
+
+  frontend-test:
+    name: frontend: test
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Cache npm (frontend)
+        uses: actions/cache@v4
+        with:
+          path: |
+            frontend/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/package-lock.json') }}
+      - name: Install & test (frontend)
+        working-directory: ./frontend
+        run: |
+          if [ "${{ needs.detect-changes.outputs.frontend }}" != "true" ] && [ "${{ needs.detect-changes.outputs.root }}" != "true" ]; then
+            echo "No changes in frontend — skipping tests"
+            exit 0
+          fi
+          if [ -f package.json ]; then
+            npm ci
+            npm test || npm run test:ci || exit 1
+          else
+            echo "No package.json in ./frontend — skip tests"
+          fi
+
+  backend-test:
+    name: backend: test
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Cache npm (backend)
+        uses: actions/cache@v4
+        with:
+          path: |
+            backend/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/package-lock.json') }}
+      - name: Install & test (backend)
+        working-directory: ./backend
+        run: |
+          if [ "${{ needs.detect-changes.outputs.backend }}" != "true" ] && [ "${{ needs.detect-changes.outputs.root }}" != "true" ]; then
+            echo "No changes in backend — skipping tests"
+            exit 0
+          fi
+          if [ -f package.json ]; then
+            npm ci
+            npm test || npm run test:ci || exit 1
+          else
+            echo "No package.json in ./backend — skip tests"
+          fi
