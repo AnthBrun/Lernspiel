@@ -33,7 +33,7 @@ jobs:
               - '.github/**'
 
   cms-test:
-    name: cms: test
+    name: "cms: test"
     runs-on: ubuntu-latest
     needs: detect-changes
     steps:
@@ -64,7 +64,7 @@ jobs:
           fi
 
   frontend-test:
-    name: frontend: test
+    name: "frontend: test"
     runs-on: ubuntu-latest
     needs: detect-changes
     steps:
@@ -95,7 +95,7 @@ jobs:
           fi
 
   backend-test:
-    name: backend: test
+    name: "backend: test"
     runs-on: ubuntu-latest
     needs: detect-changes
     steps:
