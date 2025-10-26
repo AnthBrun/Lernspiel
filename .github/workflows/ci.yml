@@ -162,8 +162,12 @@ jobs:
     needs: [cms-test, frontend-test, backend-test]
     if: github.ref == 'refs/heads/develop'
     steps:
-    - uses: actions/checkout@v3
-    - name: pull-request
-    uses: diillson/auto-pull-request@v1.0.1
-      with:
-        destination_branch: "main"
+      - uses: actions/checkout@v4
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: master
+          branch: develop
+          title: "Automatischer PR: develop → master"
+          body: "Alle Tests sind grün. Automatischer PR von develop nach master."
