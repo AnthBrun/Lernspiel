@@ -48,7 +48,7 @@ jobs:
           path: |
             cms/node_modules
             ~/.npm
-          key: ${{ runner.os }}-cms-${{ hashFiles('cms/package-lock.json') }}
+          key: ${{ runner.os }}-cms-${{ hashFiles('cms/package.json') }}
       - name: Install & test (cms)
         working-directory: ./cms
         run: |
@@ -57,11 +57,12 @@ jobs:
             exit 0
           fi
           if [ -f package.json ]; then
-            npm ci
-            npm test || npm run test:ci || exit 1
+            npm install
           else
             echo "No package.json in ./cms — skip tests"
+            exit 0
           fi
+          npm test || npm run test:ci || exit 1
 
   frontend-test:
     name: "frontend: test"
@@ -79,7 +80,7 @@ jobs:
           path: |
             frontend/node_modules
             ~/.npm
-          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/package-lock.json') }}
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/package.json') }}
       - name: Install & test (frontend)
         working-directory: ./frontend
         run: |
@@ -88,11 +89,12 @@ jobs:
             exit 0
           fi
           if [ -f package.json ]; then
-            npm ci
-            npm test || npm run test:ci || exit 1
+            npm install
           else
             echo "No package.json in ./frontend — skip tests"
+            exit 0
           fi
+          npm test || npm run test:ci || exit 1
 
   backend-test:
     name: "backend: test"
@@ -110,7 +112,7 @@ jobs:
           path: |
             backend/node_modules
             ~/.npm
-          key: ${{ runner.os }}-backend-${{ hashFiles('backend/package-lock.json') }}
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/package.json') }}
       - name: Install & test (backend)
         working-directory: ./backend
         run: |
@@ -119,8 +121,9 @@ jobs:
             exit 0
           fi
           if [ -f package.json ]; then
-            npm ci
-            npm test || npm run test:ci || exit 1
+            npm install
           else
             echo "No package.json in ./backend — skip tests"
+            exit 0
           fi
+          npm test || npm run test:ci || exit 1
