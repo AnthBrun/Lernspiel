@@ -1,6 +1,7 @@
 // src/game/game.controller.ts
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Param } from '@nestjs/common';
 import { GameService } from './game.service';
+import { EconomySystemService } from './entities/economy-system.service';
 
 @Controller('game')
 export class GameController {
@@ -14,5 +15,20 @@ export class GameController {
   @Get('sessions')
   async getSessions(@Query('userId') userId: number) {
     return this.gameService.getSessions(Number(userId));
+  }
+}
+
+@Controller('economy-systems')
+export class EconomySystemController {
+  constructor(private readonly economySystemService: EconomySystemService) {}
+
+  @Get()
+  async getAllSystems() {
+    return this.economySystemService.getAllSystems();
+  }
+
+  @Get(':name')
+  async getSystemByName(@Param('name') name: string) {
+    return this.economySystemService.getSystemByName(name);
   }
 }

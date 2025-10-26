@@ -1,0 +1,16 @@
+[
+  {
+    "name": "Planwirtschaft",
+    "description": "Alle Entscheidungen werden zentral getroffen.",
+    "indicators": {
+      "unemploymentRate": 2,
+      "inflationRate": 1,
+      "gdpGrowth": 1.5
+    },
+    "parameters": {
+      "taxRate": 50,
+      "interestRate": 0,
+      "governmentSpending": 80
+    }
+  }
+]
