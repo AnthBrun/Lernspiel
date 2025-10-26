@@ -35,7 +35,7 @@ export default function DashboardPage() {
               <h1 className="text-xl font-bold">Lernspiel Dashboard</h1>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-gray-700">Hallo, {user.name}!</span>
+              <span className="text-gray-700">Hallo, {user.email}!</span>
               <button
                 onClick={logout}
                 className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
@@ -57,14 +57,37 @@ export default function DashboardPage() {
               <p><strong>Rolle:</strong> {user.role}</p>
             </div>
 
-            <div className="mt-8">
-              <h3 className="text-lg font-semibold mb-4">Nächste Schritte:</h3>
-              <ul className="list-disc list-inside space-y-2 text-gray-700">
-                <li>Spielsitzung starten</li>
-                <li>Lernmaterial ansehen</li>
-                <li>Fortschritt überprüfen</li>
-              </ul>
-            </div>
+            {/* Rollenbasierte Funktionen */}
+            {user.role === 'admin' && (
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold mb-2 text-red-700">Admin-Funktionen</h3>
+                <ul className="list-disc list-inside space-y-2 text-gray-700">
+                  <li>Benutzerverwaltung</li>
+                  <li>Systemstatistiken</li>
+                  <li>Alle Kurse und Sitzungen einsehen</li>
+                </ul>
+              </div>
+            )}
+            {user.role === 'teacher' && (
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold mb-2 text-blue-700">Lehrer-Funktionen</h3>
+                <ul className="list-disc list-inside space-y-2 text-gray-700">
+                  <li>Kurse verwalten</li>
+                  <li>Schülerfortschritt einsehen</li>
+                  <li>Materialien hochladen</li>
+                </ul>
+              </div>
+            )}
+            {user.role === 'student' && (
+              <div className="mt-8">
+                <h3 className="text-lg font-semibold mb-2 text-green-700">Schüler-Funktionen</h3>
+                <ul className="list-disc list-inside space-y-2 text-gray-700">
+                  <li>Spielsitzung starten</li>
+                  <li>Lernmaterial ansehen</li>
+                  <li>Fortschritt überprüfen</li>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </main>
