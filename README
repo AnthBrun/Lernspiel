@@ -1,0 +1,344 @@
+# Lernspiel - Wirtschaftssimulator
+
+## Projektbeschreibung
+
+**Lernspiel** ist eine digitale Wirtschaftssimulation für den Schulunterricht (Klasse 10-13), die es Schüler*innen ermöglicht, verschiedene Wirtschaftssysteme interaktiv zu erleben und deren Funktionsweise durch praktisches Handeln zu verstehen.
+
+### Kernkonzept
+
+Das Spiel verbindet spielerisches Lernen mit fundierten wirtschaftswissenschaftlichen Prinzipien. Schüler*innen übernehmen verschiedene gesellschaftliche Rollen und treffen gemeinsam Entscheidungen, die reale wirtschaftliche Zusammenhänge simulieren. Durch das Erleben von Ursache-Wirkungs-Beziehungen werden abstrakte VWL-Konzepte greifbar und verständlich.
+
+---
+
+## Spielmechanik
+
+### Gruppenrollenspiel-Struktur
+
+#### Gruppen-Ebene
+- **Eine Gruppe = Ein Wirtschaftssystem**: Jede Spielgruppe (4-5 Spieler*innen) repräsentiert ein eigenständiges Land mit einem spezifischen Wirtschaftssystem
+- **Verfügbare Wirtschaftssysteme**:
+  - Soziale Marktwirtschaft (Ordoliberalismus)
+  - Freie Marktwirtschaft (Neoliberalismus)
+  - Planwirtschaft (Zentralverwaltungswirtschaft)
+  - Gemischte Wirtschaft (Keynesianismus)
+- **Sandboxes vs. Interaktion**: 
+  - **Sandbox-Modus** (empfohlen für Einstieg): Jede Gruppe spielt für sich, keine direkte Interaktion zwischen Gruppen
+  - **Interaktions-Modus** (fortgeschritten): Gruppen können miteinander handeln, Zölle verhängen, oder um Investitionen konkurrieren
+
+#### Rollen-Ebene (hier beispielhaft)
+Jede*r Spieler*in übernimmt **eine feste Rolle** innerhalb des Wirtschaftssystems:
+
+1. **Regierung (Finanzministerium)**
+   - Verantwortung: Fiskalpolitik, Staatshaushalt, Regulierung
+   - Entscheidungen: Steuersätze, Staatsausgaben-Verteilung (Bildung, Infrastruktur, Soziales), Umwelt- und Arbeitsmarktregulierung, Subventionen
+
+2. **Zentralbank**
+   - Verantwortung: Geldpolitik, Preisstabilität
+   - Entscheidungen: Leitzins, Geldmengensteuerung, Mindestreserve, Bankenaufsicht
+
+3. **Unternehmen (Industrie-Verband)**
+   - Verantwortung: Produktion, Investitionen, Beschäftigung
+   - Entscheidungen: Produktionsmenge, Preisgestaltung, Löhne, Einstellungen/Entlassungen, F&E-Investitionen, Automatisierungsgrad
+
+4. **Gewerkschaft (Arbeitnehmer-Vertretung)**
+   - Verantwortung: Interessen der Beschäftigten
+   - Entscheidungen: Lohnforderungen, Arbeitszeit-Modelle, Streik-Androhung/Durchführung, Verhandlungsstrategie, Weiterbildungsprogramme
+
+5. **Haushalte (Konsumenten-Verband)**
+   - Verantwortung: Konsum- und Sparverhalten, Arbeitsangebot
+   - Entscheidungen: Konsum vs. Sparen, Arbeitsmarkt-Teilnahme, Konsumpräferenzen (nachhaltig, lokal, günstig), Kreditaufnahme
+
+#### KI-gesteuerte Akteure (unklar)
+- **Ausland**: Automatisierte Simulation des internationalen Handels
+  - Reagiert auf Preisniveau, Wechselkurse und Qualität der Inlandsproduktion
+  - Exporte und Importe werden dynamisch berechnet
+  - Kann globale Krisen auslösen (Handelskriege, Rohstoffpreisschocks)
+
+### Rundenbasiertes Gameplay
+
+#### Quartals-System
+- **1 Runde = 1 Quartal** (3 Monate Spielzeit)
+- **Typische Spieldauer**: 8-12 Quartale (= 2-3 Schuljahre simuliert)
+- **KEIN Zeitlimit**: Jede Runde dauert so lange, wie die Gruppe zur Entscheidungsfindung benötigt
+  - Ermöglicht ausführliche Diskussionen
+  - Fördert Reflexion und Analyse
+  - Lehrer*in kann Pausen für Erklärungen einlegen
+
+#### Ablauf einer Runde
+
+**Phase 1: Informationsphase**
+- Präsentation der aktuellen Wirtschaftslage (Dashboard mit Indikatoren)
+- Rollen-spezifische Detailinformationen
+- Ereignisse und Nachrichten (Krisen, Trends, KI-Ausland-Aktivitäten)
+- Historische Datenansicht (Entwicklung über vergangene Quartale)
+
+**Phase 2: Diskussionsphase**
+- Freie Kommunikation zwischen allen Rollen (Präsenz und/oder Online (Text-Chat und/oder Voice))
+- Analyse-Tools verfügbar:
+  - Historische Trend-Charts
+- Keine Zeitbegrenzung - Gruppe entscheidet selbst, wann sie bereit ist
+
+**Phase 3: Entscheidungsphase**
+- Jede Rolle gibt ihre Entscheidungen über ein individuelles Interface ab
+- Entscheidungen können bis zur finalen Bestätigung geändert werden
+- Fortschrittsanzeige zeigt, welche Rollen bereits entschieden haben
+- Sobald alle Rollen bestätigt haben, geht es weiter
+
+**Phase 4: Berechnungsphase** (automatisch)
+- Backend-Wirtschaftsmodell verarbeitet alle Entscheidungen
+- Berechnung der neuen Wirtschaftsindikatoren
+- Prüfung auf Krisen-Trigger
+
+**Phase 5: Ergebnisphase**
+- Detaillierte Präsentation der Quartalsergebnisse
+- Aufschlüsselung: Welche Entscheidung hatte welche Auswirkung?
+- Fortschritt zu den Spielzielen
+- Optional: Lehrkraft kann Reflexionsfragen stellen
+- Übergang zur nächsten Runde oder Spielende
+
+---
+
+## Spielziele
+
+### Wirtschaftliche Zielindikatoren
+
+Jede Gruppe muss versuchen, folgende **Wirtschaftsindikatoren** innerhalb definierter Zielbereiche zu halten oder zu verbessern:
+
+#### Primärziele (beispielhaft)
+
+1. **Vollbeschäftigung**
+   - Ziel: Arbeitslosenquote < 4%
+   - Messung: Prozentsatz arbeitsloser Personen
+   - Relevanz: Soziale Stabilität, Kaufkraft
+
+2. **Preisstabilität**
+   - Ziel: Inflationsrate bei ~2% (±0,5%)
+   - Messung: Prozentuale Veränderung des Preisniveaus
+   - Relevanz: Planungssicherheit, Kaufkraft-Erhalt
+
+3. **Außenwirtschaftliches Gleichgewicht**
+   - Ziel: Ausgeglichene Handelsbilanz (±3% vom BIP)
+   - Messung: Differenz zwischen Exporten und Importen
+   - Relevanz: Währungsstabilität, internationale Wettbewerbsfähigkeit
+
+4. **Stetiges Wirtschaftswachstum**
+   - Ziel: BIP-Wachstum zwischen 2-3% pro Jahr
+   - Messung: Prozentuale Veränderung des Bruttoinlandsprodukts
+   - Relevanz: Wohlstand, Staatseinnahmen, Arbeitsplätze
+
+#### Sekundärziele (beispielhaft)
+
+5. **Lebensstandard**
+   - Ziel: Lebensstandard-Index > 75/100
+   - Messung: Zusammengesetzt aus Reallöhnen, Arbeitszeit, Sozialleistungen
+   - Relevanz: Lebensqualität der Bevölkerung
+
+6. **Nachhaltigkeit**
+   - Ziel: Nachhaltigkeits-Index > 60/100
+   - Messung: CO₂-Ausstoß, Ressourcenverbrauch, Umweltschutz-Maßnahmen
+   - Relevanz: Langfristige Zukunftsfähigkeit
+
+7. **Haushaltskonsolidierung**
+   - Ziel: Staatsverschuldung < 60% vom BIP
+   - Messung: Staatsschulden im Verhältnis zum BIP
+   - Relevanz: Finanzielle Handlungsfähigkeit des Staates
+
+8. **Bildung & Innovation**
+   - Ziel: Innovations-Index > 70/100
+   - Messung: F&E-Ausgaben, Patente, Bildungsinvestitionen
+   - Relevanz: Langfristige Wettbewerbsfähigkeit
+
+### Spielende & Bewertung
+
+#### Sieg
+- Punktezählung der Ziele mit Gewichtungen
+- Ranking der Gruppen
+
+#### Vergleichende Auswertung
+- Vergleich zwischen Gruppen mit unterschiedlichen Wirtschaftssystemen
+- Analyse: Welches System war in welchen Bereichen erfolgreicher?
+- Reflexion: Was sind die Trade-offs der jeweiligen Systeme?
+
+---
+
+## Äußere Einflüsse & Krisen
+
+### Ereignis-System
+
+Während des Spielverlaufs können verschiedene **externe Schocks** auftreten, die die Wirtschaft beeinflussen und schnelle Reaktionen erfordern:
+
+#### Automatische Krisen (beispielhaft)
+Treten zufällig oder bei bestimmten Bedingungen auf:
+
+1. **Ölpreisschock**
+   - Auslöser: Geopolitische Spannungen (zufällig oder bei hoher Export-Abhängigkeit)
+   - Auswirkung: Energiekosten +40-60%, Produktionskosten steigen
+   - Dauer: 2-4 Quartale
+   - Lernziel: Stagflation, Energiepolitik
+
+2. **Finanzkrise**
+   - Auslöser: Zu hohe Verschuldung, laxe Bankenaufsicht
+   - Auswirkung: Kreditklemme, Investitionen -30%, Vertrauensverlust
+   - Dauer: 3-6 Quartale
+   - Lernziel: Bankenrettung, Moral Hazard, "Too Big to Fail"
+
+3. **Rohstoffknappheit**
+   - Auslöser: Klimawandel, globale Nachfrage
+   - Auswirkung: Import-Preise +25%, Versorgungsengpässe
+   - Dauer: 2-3 Quartale
+   - Lernziel: Ressourcenabhängigkeit, Lagerhaltung
+
+4. **Technologischer Umbruch**
+   - Auslöser: KI/Automatisierung-Durchbruch (zufällig)
+   - Auswirkung: 20% der Jobs gefährdet, Produktivität +15%
+   - Dauer: Permanent, schleichend
+   - Lernziel: Strukturwandel, Umschulung, Arbeitsmarktpolitik
+
+5. **Pandemie**
+   - Auslöser: Zufall (5% pro Quartal)
+   - Auswirkung: Lockdown-Entscheidung erforderlich, Produktion -40%, Gesundheitsausgaben +200%
+   - Dauer: 3-5 Quartale
+   - Lernziel: Gesundheit vs. Wirtschaft, Krisenmanagement
+
+6. **Handelskrieg**
+   - Auslöser: KI-Ausland verhängt Strafzölle (wenn Exportüberschuss > 10%)
+   - Auswirkung: Exporte -25%, Vergeltungszölle möglich
+   - Dauer: Bis zur Lösung durch Verhandlungen
+   - Lernziel: Protektionismus, Freihandel
+
+#### Lehrer-gesteuerte Events (beispielhaft)
+Lehrkräfte können jederzeit **manuell Events auslösen**:
+
+- **Naturkatastrophen**: Erdbeben, Flut, Dürre
+- **Politische Ereignisse**: Wahl, Protest, Streik
+- **Soziale Bewegungen**: Klima-Aktivismus, Arbeitskampf
+- **Technologische Durchbrüche**: Neue Energiequelle, medizinischer Fortschritt
+- **Custom Events**: Individuelle Szenarien basierend auf Unterrichtsthemen
+
+### Krisen-Reaktionen
+- Jede Krise bietet **mehrere Handlungsoptionen** mit unterschiedlichen Kosten und Effektivitäten
+- Rollen müssen **gemeinsam entscheiden**, wie sie reagieren
+- Entscheidungen haben **kurzfristige und langfristige Konsequenzen**
+- **Nichtstun ist auch eine Option** - mit potenziell katastrophalen Folgen
+
+---
+
+## Pädagogischer Mehrwert
+
+### Lernziele
+
+#### Fachliche Kompetenzen (VWL)
+- **Wirtschaftstheoretische Konzepte** verstehen:
+  - Magisches Viereck und Zielkonflikte
+  - Phillips-Kurve (Inflation vs. Arbeitslosigkeit)
+  - Fiskal- vs. Geldpolitik
+  - Angebots- vs. Nachfragepolitik
+  - Multiplikatoreffekte
+  
+- **Wirtschaftssysteme vergleichen**:
+  - Vor- und Nachteile verschiedener Wirtschaftsordnungen
+  - Historische Beispiele (BRD vs. DDR, USA vs. Skandinavien)
+  - Aktuelle Debatten (Klimapolitik, Sozialstaat, Globalisierung)
+
+#### Überfachliche Kompetenzen
+- **Verhandlung & Kompromissfindung**: Rollen haben widersprüchliche Interessen
+- **Systemisches Denken**: Indirekte Effekte und Feedback-Loops erkennen
+- **Datenbasierte Entscheidungsfindung**: Indikatoren interpretieren, Trends analysieren
+- **Teamwork & Kommunikation**: Koordination unter Unsicherheit
+- **Reflexion**: Eigene Entscheidungen kritisch hinterfragen
+
+### Unterrichtsintegration
+
+#### Einsatzszenarien
+1. **Einführung in VWL** (2-3 Doppelstunden)
+   - Grundlagen spielerisch erlernen
+   - Motivierender Einstieg ins Thema
+
+2. **Vertiefung von Konzepten** (4-6 Doppelstunden)
+   - Wirtschaftssysteme vergleichen
+   - Krisen analysieren und bewältigen
+
+3. **Projektarbeit** (mehrere Wochen)
+   - Gruppen dokumentieren ihre Entscheidungen
+   - Abschlusspräsentation & Reflexionsarbeit
+
+#### Lehrkraft-Funktionen
+- **Live-Monitoring**: Echtzeit-Einsicht in alle Entscheidungen und Indikatoren
+- **Pause & Explain**: Spiel jederzeit anhalten für Erklärungen
+- **Event-Trigger**: Manuelle Krisen für gezielte Lernmomente
+- **Debrief-Tools**: 
+  - "Was-wäre-wenn"-Analysen nach Spielende
+  - Vergleich zwischen Gruppen
+  - Export von Daten für Nachbesprechung
+- **Differenzierung**: Schwierigkeitsgrade anpassen
+
+---
+
+## Gruppen-Interaktion
+
+### Sandbox-Modus (Standard)
+- Jede Gruppe spielt **isoliert** für sich
+- Fokus auf interne Wirtschaftsdynamik
+- Ideal für Einstieg und Konzept-Vermittlung
+- Vergleich der Ergebnisse erst am Ende
+
+### Interaktions-Modus (unklar)
+
+#### Mögliche Interaktionen zwischen Gruppen:
+1. **Handel**
+   - Gruppen können Waren importieren/exportieren
+   - Preise und Mengen verhandeln
+   - Handelsabkommen schließen
+
+2. **Wettbewerb**
+   - Konkurrenz um Investitionen
+   - Standortwettbewerb (niedrige Steuern vs. gute Infrastruktur)
+   - Brain-Drain (Fachkräfte wandern ab)
+
+3. **Diplomatie**
+   - Gemeinsame Projekte (z.B. Klimaschutz)
+   - Gegenseitige Unterstützung in Krisen
+   - Wirtschaftssanktionen
+
+4. **Währungssystem**
+   - Feste oder flexible Wechselkurse
+   - Gemeinsame Währung (wie Euro)
+   - Währungskrisen
+
+#### Didaktischer Mehrwert
+- Verständnis für **internationale Wirtschaftsbeziehungen**
+- Erleben von **Globalisierungs-Effekten**
+- Komplexere strategische Entscheidungen
+- Höherer Realismus
+
+#### Herausforderung
+- Deutlich komplexer für Schüler*innen
+- Längere Spielzeit erforderlich
+- Höherer Koordinationsaufwand für Lehrkraft
+
+---
+
+## Technische Umsetzung
+
+### Architektur-Überblick
+- **Frontend**: Next.js 15 mit React 19 (interaktive UI, Dashboard, Rollen-Interfaces)
+- **Backend**: NestJS mit TypeORM (Wirtschaftsmodell, Game Logic, WebSocket-Gateway)
+- **CMS**: Payload CMS (Content-Verwaltung für Szenarien, Krisen, Wirtschaftssysteme)
+- **Datenbank**: PostgreSQL (Game Sessions, User Data, Wirtschaftsindikatoren)
+- **Echtzeit-Kommunikation**: Socket.IO (Live-Updates, Chat)
+- **Containerisierung**: Docker Compose (Multi-Service-Orchestrierung)
+
+### Deployment
+- **Hosting**: Cloud-ready (AWS, Azure, oder On-Premise für Schulen)
+- **Skalierung**: Unterstützt mehrere parallele Klassen/Schulen
+
+---
+
+## Nächste Schritte
+1. **Konzeptphase**: Game Design Document & Wirtschaftsformeln validieren
+2. **MVP Development**: Basis-Funktionalität mit 1 Wirtschaftssystem
+3. **Alpha-Test**: Pilot-Test mit 1-2 Schulklassen
+4. **Iteration**: Feedback einarbeiten, Balancing
+5. **Beta-Launch**: Rollout für 10 Pilotschulen
+
+---
