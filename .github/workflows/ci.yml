@@ -70,6 +70,9 @@ jobs:
           key: ${{ runner.os }}-cms-${{ hashFiles('cms/package.json') }}
       - name: Set PAYLOAD_SECRET
         run: echo "PAYLOAD_SECRET=testsecret" >> $GITHUB_ENV
+      - name: Install Playwright browsers
+        working-directory: ./cms
+        run: pnpm exec playwright install
       - name: Install & test (cms)
         working-directory: ./cms
         run: |
