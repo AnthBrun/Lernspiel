@@ -1,0 +1,173 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  detect-changes:
+    name: detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      cms: ${{ steps.filter.outputs.cms }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      backend: ${{ steps.filter.outputs.backend }}
+      root: ${{ steps.filter.outputs.root }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            cms:
+              - 'cms/**'
+            frontend:
+              - 'frontend/**'
+            backend:
+              - 'backend/**'
+            root:
+              - 'package.json'
+              - 'docker-compose.yml'
+              - '.github/**'
+
+  cms-test:
+    name: "cms: test"
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    services:
+        postgres:
+            image: postgres:15
+            env:
+                POSTGRES_USER: postgres
+                POSTGRES_PASSWORD: postgres
+                POSTGRES_DB: serious_game
+            ports:
+                - 5432:5432
+            options: >-
+                --health-cmd="pg_isready -U postgres"
+                --health-interval=10s
+                --health-timeout=5s
+                --health-retries=5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+      - name: Cache pnpm (cms)
+        uses: actions/cache@v4
+        with:
+          path: |
+            cms/node_modules
+            ~/.local/share/pnpm
+            ~/.pnpm-store
+          key: ${{ runner.os }}-cms-${{ hashFiles('cms/package.json') }}
+      - name: Set PAYLOAD_SECRET
+        run: echo "PAYLOAD_SECRET=testsecret" >> $GITHUB_ENV
+      - name: Install dependencies
+        working-directory: ./cms
+        run: pnpm install
+      - name: Install Playwright browsers
+        working-directory: ./cms
+        run: pnpm exec playwright install
+      - name: Install & test (cms)
+        working-directory: ./cms
+        run: |
+          if [ "${{ needs.detect-changes.outputs.cms }}" != "true" ] && [ "${{ needs.detect-changes.outputs.root }}" != "true" ]; then
+            echo "No changes in cms — skipping tests"
+            exit 0
+          fi
+          if [ -f package.json ]; then
+            pnpm install
+          else
+            echo "No package.json in ./cms — skip tests"
+            exit 0
+          fi
+          # run the project's test script (uses pnpm)
+          pnpm test
+
+  frontend-test:
+    name: "frontend: test"
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Cache npm (frontend)
+        uses: actions/cache@v4
+        with:
+          path: |
+            frontend/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/package.json') }}
+      - name: Install & test (frontend)
+        working-directory: ./frontend
+        run: |
+          if [ "${{ needs.detect-changes.outputs.frontend }}" != "true" ] && [ "${{ needs.detect-changes.outputs.root }}" != "true" ]; then
+            echo "No changes in frontend — skipping tests"
+            exit 0
+          fi
+          if [ -f package.json ]; then
+            npm install
+          else
+            echo "No package.json in ./frontend — skip tests"
+            exit 0
+          fi
+          npm test || npm run test:ci || exit 1
+
+  backend-test:
+    name: "backend: test"
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Cache npm (backend)
+        uses: actions/cache@v4
+        with:
+          path: |
+            backend/node_modules
+            ~/.npm
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/package.json') }}
+      - name: Install & test (backend)
+        working-directory: ./backend
+        run: |
+          if [ "${{ needs.detect-changes.outputs.backend }}" != "true" ] && [ "${{ needs.detect-changes.outputs.root }}" != "true" ]; then
+            echo "No changes in backend — skipping tests"
+            exit 0
+          fi
+          if [ -f package.json ]; then
+            npm install
+          else
+            echo "No package.json in ./backend — skip tests"
+            exit 0
+          fi
+          npm test || npm run test:ci || exit 1
+
+  pull-request:
+    name: pull-request
+    runs-on: ubuntu-latest
+    needs: [cms-test, frontend-test, backend-test]
+    if: github.ref == 'refs/heads/develop'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: master
+          branch: develop
+          title: "Automatischer PR: develop → master"
+          body: "Alle Tests sind grün. Automatischer PR von develop nach master."

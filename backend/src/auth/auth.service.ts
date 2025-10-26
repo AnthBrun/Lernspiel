@@ -11,7 +11,7 @@ export class AuthService {
   ) {}
 
   async register(registerDto: RegisterDto) {
-    const payloadUrl = process.env.PAYLOAD_URL || 'http://cms:3002';
+    const payloadUrl = process.env.PAYLOAD_URL || 'http://cms:3000';
     
     try {
       // Check if user exists

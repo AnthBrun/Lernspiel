@@ -14,7 +14,7 @@
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "test": "pnpm run test:int && pnpm run test:e2e",
-    "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --no-experimental-strip-types\" pnpm exec playwright test",
+    "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation\" pnpm exec playwright test",
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
   },
   "dependencies": {
@@ -34,6 +34,7 @@
     "sharp": "0.34.3"
   },
   "devDependencies": {
+    "playwright": "1.54.2",
     "@playwright/test": "1.54.2",
     "@testing-library/react": "16.3.0",
     "@types/node": "^22.5.4",
@@ -43,8 +44,6 @@
     "eslint": "^9.16.0",
     "eslint-config-next": "15.4.6",
     "jsdom": "26.1.0",
-    "playwright": "1.54.1",
-    "playwright-core": "1.54.2",
     "prettier": "^3.4.2",
     "typescript": "5.9.2",
     "vite-tsconfig-paths": "5.1.4",
