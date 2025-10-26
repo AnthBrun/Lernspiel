@@ -156,17 +156,14 @@ jobs:
           fi
           npm test || npm run test:ci || exit 1
 
-  create-pr:
-    name: Create PR to master
+  pull-request:
+    name: pull-request
     runs-on: ubuntu-latest
     needs: [cms-test, frontend-test, backend-test]
     if: github.ref == 'refs/heads/develop'
     steps:
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          base: master
-          branch: develop
-          title: "Automatischer PR: develop -> master"
-          body: "Alle Tests sind grün. Automatischer PR von develop nach master."
+    - uses: actions/checkout@v3
+    - name: pull-request
+    uses: diillson/auto-pull-request@v1.0.1
+      with:
+        destination_branch: "main"
