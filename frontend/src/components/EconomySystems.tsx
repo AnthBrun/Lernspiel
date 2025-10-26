@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchEconomySystems } from '@/lib/economySystems';
 
 export function EconomySystems() {
-    const [systems, setSystems] = useState<any[]>([]);
+    const [systems, setSystems] = useState<unknown[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
