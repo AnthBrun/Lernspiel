@@ -54,6 +54,8 @@ jobs:
             ~/.local/share/pnpm
             ~/.pnpm-store
           key: ${{ runner.os }}-cms-${{ hashFiles('cms/package.json') }}
+      - name: Set PAYLOAD_SECRET
+        run: echo "PAYLOAD_SECRET=testsecret" >> $GITHUB_ENV
       - name: Install & test (cms)
         working-directory: ./cms
         run: |
